@@ -7,10 +7,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(
   cors({
-    origin:
-      process.env.ENVIRONMENT === "PROD"
-        ? "http://localhost"
-        : "http://localhost:5173",
+    origin: process.env.PROD_CLIENT_URL || "http://localhost:5173",
   })
 );
 
