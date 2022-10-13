@@ -10,16 +10,19 @@ module.exports = (app) => {
     next();
     return;
   });
-  app.post("/api/attendance", [authJwt.verifyToken], controller.register);
-  app.get("/api/attendance/today", [authJwt.verifyToken], controller.getToday);
   app.post(
-    "/api/attendance/userdayattendance",
-    [authJwt.verifyToken],
-    controller.userDayAttendance
-  );
-  app.post(
-    "/api/attendance/dayreport",
+    "/api/attendance",
     [authJwt.verifyToken, authJwt.isAdmin],
-    controller.dayReport
+    controller.register
+  );
+  app.get(
+    "/api/attendance/today",
+    [authJwt.verifyToken, authJwt.isAdmin],
+    controller.today
+  );
+  app.get(
+    "/api/attendance/todayUsers",
+    [authJwt.verifyToken, authJwt.isAdmin],
+    controller.todayUsers
   );
 };

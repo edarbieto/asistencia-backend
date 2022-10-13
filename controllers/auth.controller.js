@@ -30,6 +30,9 @@ exports.signIn = async (req, res) => {
     }
     const token = jwt.sign({ id: user.id }, config.secret, { expiresIn: "1h" });
     const roles = await user.getRoles();
+    if (!roles.map((role) => role.name).includes("admin")) {
+      return res.status(403).send({ message: "Require Administrator role." });
+    }
     return res
       .cookie("accessToken", token, { httpOnly: true })
       .status(200)
@@ -55,11 +58,11 @@ exports.signUp = async (req, res) => {
       nickname: req.body.nickname,
       password: hashedPassword,
     });
-    if (req.body.roles) {
+    if (req.body.roles && req.body.roles.length > 0) {
       const roles = await Role.findAll({
         where: {
           name: {
-            [Op.or]: req.body.roles,
+            [Op.in]: req.body.roles,
           },
         },
       });
